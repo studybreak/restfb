@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -39,7 +39,7 @@ import com.restfb.util.ReflectionUtils;
 /**
  * Represents a <a href="http://developers.facebook.com/docs/api">Graph API
  * Connection type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
 public class Connection<T> implements Iterable<List<T>> {
@@ -59,7 +59,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * Iterator over connection pages.
-   * 
+   *
    * @author <a href="http://restfb.com">Mark Allen</a>
    * @since 1.6.7
    */
@@ -69,7 +69,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
     /**
      * Creates a new iterator over the given {@code connection}.
-     * 
+     *
      * @param connection
      *          The connection over which to iterate.
      */
@@ -117,7 +117,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * Creates a connection with the given {@code jsonObject}.
-   * 
+   *
    * @param facebookClient
    *          The {@code FacebookClient} used to fetch additional pages and map
    *          data to JSON objects.
@@ -133,18 +133,28 @@ public class Connection<T> implements Iterable<List<T>> {
    */
   @SuppressWarnings("unchecked")
   public Connection(FacebookClient facebookClient, String json, Class<T> connectionType) {
-    List<T> data = new ArrayList<T>();
+      this(facebookClient, json, null, connectionType);
+  }
 
-    if (json == null)
-      throw new FacebookJsonMappingException("You must supply non-null connection JSON.");
+  public Connection(FacebookClient facebookClient, JsonObject jsonObject, Class<T> connectionType) {
+      this(facebookClient, null, jsonObject, connectionType);
+  }
 
-    JsonObject jsonObject = null;
+  @SuppressWarnings("unchecked")
+  protected Connection(FacebookClient facebookClient, String json, JsonObject jsonObject, Class<T> connectionType) {
 
-    try {
-      jsonObject = new JsonObject(json);
-    } catch (JsonException e) {
-      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    if (jsonObject == null) {
+        if (json == null)
+            throw new FacebookJsonMappingException("You must supply non-null connection JSON.");
+
+        try {
+            jsonObject = new JsonObject(json);
+        } catch (JsonException e) {
+          throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+        }
     }
+
+    List<T> data = new ArrayList<T>();
 
     // Pull out data
     JsonArray jsonData = jsonObject.getJsonArray("data");
@@ -170,7 +180,7 @@ public class Connection<T> implements Iterable<List<T>> {
   /**
    * Fetches the next page of the connection. Designed to be used by
    * {@link ConnectionIterator}.
-   * 
+   *
    * @return The next page of the connection.
    * @since 1.6.7
    */
@@ -204,7 +214,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * Data for this connection.
-   * 
+   *
    * @return Data for this connection.
    */
   public List<T> getData() {
@@ -213,7 +223,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * This connection's "previous page of data" URL.
-   * 
+   *
    * @return This connection's "previous page of data" URL, or {@code null} if
    *         there is no previous page.
    * @since 1.5.3
@@ -224,7 +234,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * This connection's "next page of data" URL.
-   * 
+   *
    * @return This connection's "next page of data" URL, or {@code null} if there
    *         is no next page.
    * @since 1.5.3
@@ -235,7 +245,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * Does this connection have a previous page of data?
-   * 
+   *
    * @return {@code true} if there is a previous page of data for this
    *         connection, {@code false} otherwise.
    */
@@ -245,7 +255,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * Does this connection have a next page of data?
-   * 
+   *
    * @return {@code true} if there is a next page of data for this connection,
    *         {@code false} otherwise.
    */

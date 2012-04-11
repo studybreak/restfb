@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,11 +31,15 @@ import com.restfb.util.ReflectionUtils;
  * Represents the <a
  * href="http://developers.facebook.com/docs/reference/api/">Venue Graph API
  * type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.5
  */
 public class Venue implements Serializable {
+
+  @Facebook
+  private String id;
+
   @Facebook
   private String street;
 
@@ -47,6 +51,9 @@ public class Venue implements Serializable {
 
   @Facebook
   private String country;
+
+  @Facebook
+  private String zip;
 
   @Facebook
   private Double latitude;
@@ -81,8 +88,17 @@ public class Venue implements Serializable {
   }
 
   /**
+   * Facebook id of the venue.
+   *
+   * @return Facebook id of the venue.
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
    * Street address of the venue.
-   * 
+   *
    * @return Street address of the venue.
    */
   public String getStreet() {
@@ -91,7 +107,7 @@ public class Venue implements Serializable {
 
   /**
    * The venue's city.
-   * 
+   *
    * @return The venue's city.
    */
   public String getCity() {
@@ -100,7 +116,7 @@ public class Venue implements Serializable {
 
   /**
    * The venue's state.
-   * 
+   *
    * @return The venue's state.
    */
   public String getState() {
@@ -109,7 +125,7 @@ public class Venue implements Serializable {
 
   /**
    * The venue's country.
-   * 
+   *
    * @return The venue's country.
    */
   public String getCountry() {
@@ -117,8 +133,17 @@ public class Venue implements Serializable {
   }
 
   /**
+   * The venue's zip.
+   *
+   * @return The venue's zip.
+   */
+  public String getZip() {
+    return zip;
+  }
+
+  /**
    * The venue's latitude.
-   * 
+   *
    * @return The venue's latitude.
    */
   public Double getLatitude() {
@@ -127,7 +152,7 @@ public class Venue implements Serializable {
 
   /**
    * The venue's longitude.
-   * 
+   *
    * @return The venue's longitude.
    */
   public Double getLongitude() {

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ import com.restfb.json.JsonObject;
 /**
  * Default implementation of a <a
  * href="http://developers.facebook.com/docs/api">Facebook Graph API</a> client.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
 public class DefaultFacebookClient extends BaseFacebookClient implements FacebookClient {
@@ -88,7 +89,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
   /**
    * Video Upload API endpoint URL.
-   * 
+   *
    * @since 1.6.5
    */
   protected static final String FACEBOOK_GRAPH_VIDEO_ENDPOINT_URL = "https://graph-video.facebook.com";
@@ -149,6 +150,11 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
   protected static final String BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME = "error_description";
 
   /**
+   * Whether to output profiling data on each facebook request.
+   */
+  public static boolean profilingEnabled = false;
+
+  /**
    * Creates a Facebook Graph API client with no access token.
    * <p>
    * Without an access token, you can view and search public graph data but
@@ -160,7 +166,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
   /**
    * Creates a Facebook Graph API client with the given {@code accessToken}.
-   * 
+   *
    * @param accessToken
    *          A Facebook OAuth access token.
    */
@@ -171,7 +177,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
   /**
    * Creates a Facebook Graph API client with the given {@code accessToken},
    * {@code webRequestor}, and {@code jsonMapper}.
-   * 
+   *
    * @param accessToken
    *          A Facebook OAuth access token.
    * @param webRequestor
@@ -420,7 +426,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
   /**
    * Coordinates the process of executing the API request GET/POST and
    * processing the response we receive from the endpoint.
-   * 
+   *
    * @param endpoint
    *          Facebook Graph API endpoint.
    * @param parameters
@@ -432,13 +438,28 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    *           processing the response.
    */
   protected String makeRequest(String endpoint, Parameter... parameters) {
-    return makeRequest(endpoint, false, false, null, parameters);
+    long past = 0, now = 0, delta = 0;
+    if (profilingEnabled) {
+      past = new Date().getTime();
+    }
+    String ret;
+    try {
+      ret = makeRequest(endpoint, false, false, null, parameters);
+    }
+    finally {
+      if (profilingEnabled) {
+        now =  new Date().getTime();
+        delta = now - past;
+        logger.warning("profile:face," + now + "," + delta + ",\"" + endpoint + "\"");
+      }
+    }
+    return ret;
   }
 
   /**
    * Coordinates the process of executing the API request GET/POST and
    * processing the response we receive from the endpoint.
-   * 
+   *
    * @param endpoint
    *          Facebook Graph API endpoint.
    * @param executeAsPost
@@ -536,7 +557,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    * <p>
    * If the {@code error_code} JSON field is present, we've got a response
    * status error for this API call.
-   * 
+   *
    * @param json
    *          The JSON returned by Facebook in response to an API call.
    * @throws FacebookGraphException
@@ -546,7 +567,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    * @throws FacebookJsonMappingException
    *           If an error occurs while processing the JSON.
    */
-  protected void throwFacebookResponseStatusExceptionIfNecessary(String json) {
+  public void throwFacebookResponseStatusExceptionIfNecessary(String json) {
     // If we have a legacy exception, throw it.
     throwLegacyFacebookResponseStatusExceptionIfNecessary(json);
 
@@ -583,7 +604,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    * we've got a response status error for this batch API call. Extracts
    * relevant information from the JSON and throws an exception which
    * encapsulates it for end-user consumption.
-   * 
+   *
    * @param json
    *          The JSON returned by Facebook in response to a batch API call.
    * @throws FacebookResponseStatusException
@@ -624,7 +645,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    * exceptions.
    * <p>
    * Uses an instance of {@link DefaultGraphFacebookExceptionMapper} by default.
-   * 
+   *
    * @return An instance of the exception mapper we should use.
    * @since 1.6
    */
@@ -638,7 +659,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    * <p>
    * Thanks to BatchFB's Jeff Schnitzer for doing some of the legwork to find
    * these exception type names.
-   * 
+   *
    * @author <a href="http://restfb.com">Mark Allen</a>
    * @since 1.6.3
    */
@@ -662,7 +683,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
   /**
    * Generate the parameter string to be included in the Facebook API request.
-   * 
+   *
    * @param parameters
    *          Arbitrary number of extra parameters to include in the request.
    * @return The parameter string to include in the Facebook API request.
@@ -713,7 +734,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
   /**
    * Returns the base endpoint URL for the Graph API.
-   * 
+   *
    * @return The base endpoint URL for the Graph API.
    */
   protected String getFacebookGraphEndpointUrl() {
@@ -723,7 +744,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
   /**
    * Returns the base endpoint URL for the Graph API's video upload
    * functionality.
-   * 
+   *
    * @return The base endpoint URL for the Graph API's video upload
    *         functionality.
    * @since 1.6.5

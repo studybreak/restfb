@@ -27,6 +27,7 @@ import static com.restfb.util.StringUtils.isBlank;
 import static com.restfb.util.StringUtils.trimToEmpty;
 import static java.lang.String.format;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,7 +38,7 @@ import com.restfb.exception.FacebookJsonMappingException;
  * 
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
-public final class Parameter {
+public final class Parameter implements Serializable {
   /**
    * Parameter name.
    */

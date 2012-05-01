@@ -39,6 +39,7 @@ import com.restfb.exception.FacebookJsonMappingException;
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
 public final class Parameter implements Serializable {
+    
   /**
    * Parameter name.
    */

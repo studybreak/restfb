@@ -155,6 +155,15 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
   public static boolean profilingEnabled = false;
 
   /**
+   * WebRequestor factory function.
+   */
+  public static Func<WebRequestor> webRequestorFactory = new Func<WebRequestor>() {
+    public WebRequestor call() {
+      return new DefaultWebRequestor();
+    }
+  };
+
+  /**
    * Creates a Facebook Graph API client with no access token.
    * <p>
    * Without an access token, you can view and search public graph data but
@@ -171,7 +180,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    *          A Facebook OAuth access token.
    */
   public DefaultFacebookClient(String accessToken) {
-    this(accessToken, new DefaultWebRequestor(), new DefaultJsonMapper());
+    this(accessToken, webRequestorFactory.call(), new DefaultJsonMapper());
   }
 
   /**

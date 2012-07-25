@@ -63,8 +63,18 @@ public class Event extends NamedFacebookType {
 
   @Facebook("updated_time")
   private String updatedTime;
+
+  @Facebook
+  private String eid;
   
   private static final long serialVersionUID = 1L;
+
+  public String getId() {
+    String id = super.getId();
+    if (id != null)
+      return id;
+    return eid;
+  }
 
   /**
    * An object containing the name and ID of the user who owns the event

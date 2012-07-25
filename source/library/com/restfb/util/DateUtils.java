@@ -84,7 +84,18 @@ public final class DateUtils {
     if (parsedDate == null)
       parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE);
 
+    if (parsedDate == null)
+      parsedDate = toDateFromSeconds(date);
+
     return parsedDate;
+  }
+
+  private static Date toDateFromSeconds(String date) { 
+    try {
+      return new Date(Long.decode(date) * 1000);
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   /**

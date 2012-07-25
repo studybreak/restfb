@@ -200,6 +200,11 @@ public class DefaultJsonMapper implements JsonMapper {
       else
         throw new FacebookJsonMappingException("JSON is an empty string - can't map it.");
 
+    // Sometimes facebook returns an empty array when they meant to return an 
+    // empty object.
+    if ("[]".equals(json))
+      return null;
+
     if (json.startsWith("["))
       if (jsonMappingErrorHandler.handleMappingError(json, type, null))
         return null;

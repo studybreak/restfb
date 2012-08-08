@@ -47,6 +47,12 @@ public final class DateUtils {
    * Example: {@code 2010-02-28T16:11:08}
    */
   public static final String FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
+  
+  /**
+   * Facebook "date only" date format.
+   * Example: {@code 2010-02-28}
+   */
+  public static final String FACEBOOK_DATE_ONLY = "yyyy-MM-dd";
 
   /**
    * Facebook short date format. Example: {@code 04/15/1984}
@@ -83,6 +89,9 @@ public final class DateUtils {
 
     if (parsedDate == null)
       parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE);
+    
+    if (parsedDate == null)
+      parsedDate = toDateWithFormatString(date, FACEBOOK_DATE_ONLY);
 
     if (parsedDate == null)
       parsedDate = toDateFromSeconds(date);

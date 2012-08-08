@@ -44,10 +44,10 @@ public class Event extends NamedFacebookType {
   private String description;
 
   @Facebook("start_time")
-  private String startTime;
+  protected String startTime;
 
   @Facebook("end_time")
-  private String endTime;
+  protected String endTime;
 
   @Facebook
   private String location;

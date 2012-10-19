@@ -85,6 +85,9 @@ public final class DateUtils {
    *         string or {@code null} if {@code date} is {@code null} or invalid.
    */
   public static Date toDateFromLongFormat(String date) {
+    if (date == null)
+        return null;
+    
     Date parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT);
 
     if (parsedDate == null)
@@ -101,7 +104,11 @@ public final class DateUtils {
 
   private static Date toDateFromSeconds(String date) { 
     try {
-      return new Date(Long.decode(date) * 1000);
+      // Deal with both seconds and ms
+      Long val = Long.decode(date);
+      if (val < 31536000L)
+          val *= 1000;
+      return new Date(val);
     } catch (Exception e) {
       return null;
     }

@@ -75,6 +75,10 @@ public class Event extends NamedFacebookType {
       return id;
     return eid;
   }
+  
+  public void setId(String val) {
+      this.eid = val;
+  }
 
   /**
    * An object containing the name and ID of the user who owns the event
@@ -85,6 +89,10 @@ public class Event extends NamedFacebookType {
   public NamedFacebookType getOwner() {
     return owner;
   }
+  
+  public void setOwner(NamedFacebookType val) {
+      this.owner = val;
+  }
 
   /**
    * The long-form HTML description of the event.
@@ -93,6 +101,10 @@ public class Event extends NamedFacebookType {
    */
   public String getDescription() {
     return description;
+  }
+  
+  public void setDescription(String val) {
+      this.description = val;
   }
 
   /**
@@ -103,6 +115,10 @@ public class Event extends NamedFacebookType {
   public Date getStartTime() {
     return toDateFromLongFormat(startTime);
   }
+  
+  public void setStartTime(Date val) {
+      this.startTime = val == null ? null : Long.toString(val.getTime());
+  }
 
   /**
    * The end time of the event.
@@ -111,6 +127,10 @@ public class Event extends NamedFacebookType {
    */
   public Date getEndTime() {
     return toDateFromLongFormat(endTime);
+  }
+  
+  public void setEndTime(Date val) {
+      this.endTime = val == null ? null : Long.toString(val.getTime());
   }
 
   /**
@@ -121,6 +141,10 @@ public class Event extends NamedFacebookType {
   public String getLocation() {
     return location;
   }
+  
+  public void setLocation(String val) {
+      this.location = val;
+  }
 
   /**
    * The location of this event, a structured address object.
@@ -129,6 +153,74 @@ public class Event extends NamedFacebookType {
    */
   public Venue getVenue() {
     return venue;
+  }
+  
+  public void setVenue(Venue val) {
+      this.venue = val;
+  }
+  
+  public String getLocationId() {
+      if (this.venue == null)
+          return null;
+      
+      return this.venue.getId();
+  }
+  
+  public void setLocationId(String val) {
+      if (this.venue == null) {
+          if (val == null)
+             return;
+          else
+             this.venue = new Venue();
+      }
+      
+      this.venue.setId(val);
+  }
+  
+  public Double getLatitude() {
+      return this.venue == null ? null : this.venue.getLatitude();
+  }
+  
+  public void setLatitude(Double val) {
+      if (this.venue == null) {
+          if (val == null)
+              return;
+          else
+              this.venue = new Venue();
+      }
+      
+      this.venue.setLatitude(val);
+  }
+  
+  public Double getLongitude() {
+      return this.venue == null ? null : this.venue.getLongitude();
+  }
+  
+  public void setLongitude(Double val) {
+      if (this.venue == null) {
+          if (val == null)
+              return;
+          else
+              this.venue = new Venue();
+      }
+      
+      this.venue.setLongitude(val);
+  }
+  
+  /**
+   * Sets venue info from the given location Page
+   * @param page
+   */
+  public void setLocation(Location location) {
+      
+      if (this.venue == null) {
+          if (location == null)
+              return;
+          else
+              this.venue = new Venue();
+      }
+      
+      this.venue.setFrom(location);  
   }
 
   /**
@@ -139,6 +231,10 @@ public class Event extends NamedFacebookType {
   public String getRsvpStatus() {
     return rsvpStatus;
   }
+  
+  public void setRsvpStatus(String val) {
+      this.rsvpStatus = val;
+  }
 
   /**
    * The visibility of this event. Can be 'OPEN', 'CLOSED', or 'SECRET'.
@@ -148,6 +244,10 @@ public class Event extends NamedFacebookType {
   public String getPrivacy() {
     return privacy;
   }
+  
+  public void setPrivacy(String val) {
+      this.privacy = val;
+  }
 
   /**
    * The last time the event was updated.
@@ -156,5 +256,9 @@ public class Event extends NamedFacebookType {
    */
   public Date getUpdatedTime() {
     return toDateFromLongFormat(updatedTime);
+  }
+  
+  public void setUpdatedTime(Date val) {
+      this.updatedTime = Long.toString(val.getTime());
   }
 }

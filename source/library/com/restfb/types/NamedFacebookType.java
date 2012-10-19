@@ -47,4 +47,8 @@ public class NamedFacebookType extends FacebookType {
   public String getName() {
     return name;
   }
+  
+  public void setName(String val) {
+      this.name = val;
+  }
 }

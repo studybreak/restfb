@@ -95,6 +95,10 @@ public class Venue implements Serializable {
   public String getId() {
     return id;
   }
+  
+  public void setId(String val) {
+    this.id = val;
+  }
 
   /**
    * Street address of the venue.
@@ -149,6 +153,10 @@ public class Venue implements Serializable {
   public Double getLatitude() {
     return latitude;
   }
+  
+  public void setLatitude(Double val) {
+      this.latitude = val;
+  }
 
   /**
    * The venue's longitude.
@@ -158,4 +166,24 @@ public class Venue implements Serializable {
   public Double getLongitude() {
     return longitude;
   }
+  
+  public void setLongitude(Double val) {
+      this.longitude = val;
+  }
+
+  public void setFrom(Location location) {
+
+    if (location == null)
+        return;
+    
+    this.latitude = location.getLatitude();
+    this.longitude = location.getLongitude();
+    this.street = location.getStreet();
+    this.city = location.getCity();
+    this.state = location.getState();
+    this.zip = location.getZip();
+    this.country = location.getCountry();
+    
+  }
+
 }

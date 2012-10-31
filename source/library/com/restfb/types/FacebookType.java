@@ -81,6 +81,10 @@ public class FacebookType implements Serializable {
   public String getId() {
     return id;
   }
+  
+  public void setId(String val) {
+      this.id = val;
+  }
 
   /**
    * This object's metadata, available by including the {@code metadata=1} URL

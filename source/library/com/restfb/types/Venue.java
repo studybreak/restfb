@@ -117,6 +117,10 @@ public class Venue implements Serializable {
   public String getCity() {
     return city;
   }
+  
+  public void setCity(String val) {
+      this.city = val;
+  }
 
   /**
    * The venue's state.
@@ -126,6 +130,10 @@ public class Venue implements Serializable {
   public String getState() {
     return state;
   }
+  
+  public void setState(String val) {
+      this.state = val;
+  }
 
   /**
    * The venue's country.
@@ -134,6 +142,10 @@ public class Venue implements Serializable {
    */
   public String getCountry() {
     return country;
+  }
+  
+  public void setCountry(String val) {
+      this.country = val;
   }
 
   /**

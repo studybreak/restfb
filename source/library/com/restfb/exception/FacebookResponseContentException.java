@@ -23,26 +23,24 @@
 package com.restfb.exception;
 
 /**
- * Specifies a method for mapping Graph and Old REST API exceptions to corresponding instances of
- * {@code FacebookException}.
+ * Indicates that the Facebook Graph API endpoint returned an unexpected
+ * response body.
  * 
  * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.6
+ * @since 1.6.10
  */
-public interface FacebookExceptionMapper {
+public class FacebookResponseContentException extends FacebookException {
+  private static final long serialVersionUID = 1L;
+
   /**
-   * Given a Facebook API exception type and message, generates an instance of the corresponding
-   * {@code FacebookGraphException} or one of its subclasses.
+   * Creates an exception with the given message and cause.
    * 
-   * @param errorCode
-   *          Old REST API exception error code field, e.g. 190.
-   * @param httpStatusCode
-   *          The HTTP status code returned by the server, e.g. 500.
-   * @param type
-   *          Graph API exception type field, e.g. "OAuthException".
    * @param message
-   *          Graph or Old REST API message field, e.g. "Invalid access token signature."
-   * @return An appropriate {@code FacebookException} subclass.
+   *          A message describing this exception.
+   * @param cause
+   *          The exception that caused this exception to be thrown.
    */
-  FacebookException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode, String type, String message);
+  public FacebookResponseContentException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

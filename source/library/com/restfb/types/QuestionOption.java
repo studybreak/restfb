@@ -29,23 +29,59 @@ import java.util.Date;
 import com.restfb.Facebook;
 
 /**
- * Represents a Connection to a <a
- * href="http://developers.facebook.com/docs/reference/api/page">Page Graph API
- * type</a>, for example the Pages returned from {@code me/music}.
+ * Represents the <a
+ * href="http://developers.facebook.com/docs/reference/api/question_option"
+ * >QuestionOption Graph API type</a>.
  * 
- * @author Patrick Alberts
- * @since 1.6.3
+ * @author <a href="http://restfb.com">Mark Allen</a>
+ * @since 1.6.10
  */
-public class PageConnection extends CategorizedFacebookType {
+public class QuestionOption extends NamedFacebookType {
+  @Facebook
+  private NamedFacebookType from;
+
+  @Facebook
+  private Integer votes;
+
+  @Facebook
+  private CategorizedFacebookType object;
+
   @Facebook("created_time")
   private String createdTime;
 
   private static final long serialVersionUID = 1L;
 
   /**
-   * The time the connection was initially created.
+   * User who asked the question.
    * 
-   * @return The time the connection was initially created.
+   * @return User who asked the question.
+   */
+  public NamedFacebookType getFrom() {
+    return from;
+  }
+
+  /**
+   * Number of votes this option has received.
+   * 
+   * @return Number of votes this option has received.
+   */
+  public Integer getVotes() {
+    return votes;
+  }
+
+  /**
+   * Optional page associated with this option.
+   * 
+   * @return Optional page associated with this option.
+   */
+  public CategorizedFacebookType getObject() {
+    return object;
+  }
+
+  /**
+   * Time when option was created.
+   * 
+   * @return Time when option was created.
    */
   public Date getCreatedTime() {
     return toDateFromLongFormat(createdTime);

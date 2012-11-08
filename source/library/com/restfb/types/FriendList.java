@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,29 +20,33 @@
  * THE SOFTWARE.
  */
 
-package com.restfb.exception;
+package com.restfb.types;
+
+import com.restfb.Facebook;
 
 /**
- * Specifies a method for mapping Graph and Old REST API exceptions to corresponding instances of
- * {@code FacebookException}.
+ * Represents the <a
+ * href="https://developers.facebook.com/docs/reference/api/FriendList"
+ * >FriendList Graph API type</a>.
  * 
+ * @author <a href="http://ex-nerd.com">Chris Petersen</a>
  * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.6
+ * @since 1.6.10
  */
-public interface FacebookExceptionMapper {
+public class FriendList extends NamedFacebookType {
+  @Facebook("list_type")
+  private String listType;
+
+  private static final long serialVersionUID = 1L;
+
   /**
-   * Given a Facebook API exception type and message, generates an instance of the corresponding
-   * {@code FacebookGraphException} or one of its subclasses.
+   * The type of the friends list; Possible values are: {@code close_friends},
+   * {@code acquaintances}, {@code restricted}, {@code user_created},
+   * {@code education}, {@code work}, {@code current_city} or {@code family}.
    * 
-   * @param errorCode
-   *          Old REST API exception error code field, e.g. 190.
-   * @param httpStatusCode
-   *          The HTTP status code returned by the server, e.g. 500.
-   * @param type
-   *          Graph API exception type field, e.g. "OAuthException".
-   * @param message
-   *          Graph or Old REST API message field, e.g. "Invalid access token signature."
-   * @return An appropriate {@code FacebookException} subclass.
+   * @return The type of the friends list.
    */
-  FacebookException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode, String type, String message);
+  public String getListType() {
+    return listType;
+  }
 }

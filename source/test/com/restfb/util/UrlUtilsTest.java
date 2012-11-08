@@ -20,50 +20,34 @@
  * THE SOFTWARE.
  */
 
-package com.restfb;
+package com.restfb.util;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
-import static com.restfb.util.DateUtils.toDateFromMonthYearFormat;
-import static com.restfb.util.DateUtils.toDateFromShortFormat;
+import static com.restfb.util.UrlUtils.extractParametersFromQueryString;
+import static com.restfb.util.UrlUtils.extractParametersFromUrl;
 import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 
 /**
- * Unit tests that exercise {@link com.restfb.util.DateUtils}.
+ * Unit tests that exercise {@link com.restfb.util.UrlUtils}.
  * 
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
-public class DateUtilsTest {
-  /**
-   * Tests the "short" date format.
-   */
+public class UrlUtilsTest {
   @Test
-  public void shortDates() {
-    assertTrue(toDateFromShortFormat("04/15/1984") != null);
-    assertTrue(toDateFromShortFormat("01/01/1970") != null);
-    assertTrue(toDateFromShortFormat("junk") == null);
+  public void queryString() {
+    assertTrue(extractParametersFromQueryString(null).size() == 0);
+    assertTrue(extractParametersFromQueryString("").size() == 0);
+    assertTrue(extractParametersFromQueryString("access_token=123").size() == 1);
+    assertTrue(extractParametersFromQueryString("?access_token=123").size() == 1);
   }
 
-  /**
-   * FB uses "long" date formats with and without timezones. Make sure we handle
-   * both gracefully.
-   */
   @Test
-  public void longDates() {
-    assertTrue(toDateFromLongFormat("2011-12-22T21:00:00+0000") != null);
-    assertTrue(toDateFromLongFormat("2011-12-22T21:00:00") != null);
-    assertTrue(toDateFromLongFormat("junk") == null);
-  }
-
-  /**
-   * Tests the "month and year" date format.
-   */
-  @Test
-  public void monthYearDates() {
-    assertTrue(toDateFromMonthYearFormat("2007-03") != null);
-    assertTrue(toDateFromMonthYearFormat("2011-12") != null);
-    assertTrue(toDateFromMonthYearFormat("0000-00") == null);
-    assertTrue(toDateFromMonthYearFormat("junk") == null);
+  public void urlParameters() {
+    assertTrue(extractParametersFromUrl(null).size() == 0);
+    assertTrue(extractParametersFromUrl("").size() == 0);
+    assertTrue(extractParametersFromUrl("access_token=123").size() == 0);
+    assertTrue(extractParametersFromUrl("?access_token=123").size() == 1);
+    assertTrue(extractParametersFromUrl("http://whatever?access_token=123").size() == 1);
   }
 }

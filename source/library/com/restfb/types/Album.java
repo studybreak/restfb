@@ -58,6 +58,9 @@ public class Album extends NamedFacebookType {
   @Facebook
   private String privacy;
 
+  @Facebook("can_upload")
+  private Boolean canUpload;
+
   @Facebook("created_time")
   private String createdTime;
 
@@ -128,6 +131,15 @@ public class Album extends NamedFacebookType {
    */
   public String getPrivacy() {
     return privacy;
+  }
+
+  /**
+   * Whether or not the user has permission to upload to this album.
+   * 
+   * @return The {@code can_upload} setting for this album.
+   */
+  public Boolean getCanUpload() {
+    return canUpload;
   }
 
   /**

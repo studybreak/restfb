@@ -22,7 +22,8 @@
 
 package com.restfb.util;
 
-import static java.util.logging.Level.FINE;
+import static java.lang.String.format;
+import static java.util.logging.Level.FINER;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,6 +61,11 @@ public final class DateUtils {
   public static final String FACEBOOK_SHORT_DATE_FORMAT = "MM/dd/yyyy";
 
   /**
+   * Facebook alternate short date format. Example: {@code 2012-09-15}
+   */
+  public static final String FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT = "yyyy-MM-dd";
+
+  /**
    * Facebook month-year only date format. Example: {@code Example: 2007-03}
    */
   public static final String FACEBOOK_MONTH_YEAR_DATE_FORMAT = "yyyy-MM";
@@ -75,7 +81,8 @@ public final class DateUtils {
   private DateUtils() {}
 
   /**
-   * Returns a Java representation of a Facebook "long" {@code date} string.
+   * Returns a Java representation of a Facebook "long" {@code date} string, or
+   * the number of seconds since the epoch.
    * <p>
    * Supports dates with or without timezone information.
    * 
@@ -86,10 +93,16 @@ public final class DateUtils {
    */
   public static Date toDateFromLongFormat(String date) {
     if (date == null)
-        return null;
-    
+      return null;
+
+    // Is this an all-digit date? Then assume it's the "seconds since epoch"
+    // variant
+    if (date.trim().matches("\\d+"))
+      return new Date(Long.valueOf(date) * 1000L);
+
     Date parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT);
 
+    // Fall back to variant without timezone if the initial parse fails
     if (parsedDate == null)
       parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE);
     
@@ -123,7 +136,16 @@ public final class DateUtils {
    *         string or {@code null} if {@code date} is {@code null} or invalid.
    */
   public static Date toDateFromShortFormat(String date) {
-    return toDateWithFormatString(date, FACEBOOK_SHORT_DATE_FORMAT);
+    if (date == null)
+      return null;
+
+    Date parsedDate = toDateWithFormatString(date, FACEBOOK_SHORT_DATE_FORMAT);
+
+    // Fall back to variant if initial parse fails
+    if (parsedDate == null)
+      parsedDate = toDateWithFormatString(date, FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT);
+
+    return parsedDate;
   }
 
   /**
@@ -137,6 +159,9 @@ public final class DateUtils {
    *         or invalid.
    */
   public static Date toDateFromMonthYearFormat(String date) {
+    if (date == null)
+      return null;
+
     if ("0000-00".equals(date))
       return null;
 
@@ -158,8 +183,8 @@ public final class DateUtils {
     try {
       return new SimpleDateFormat(format).parse(date);
     } catch (ParseException e) {
-      if (logger.isLoggable(FINE))
-        logger.fine("Unable to parse date '" + date + "' using format string '" + format + "': " + e);
+      if (logger.isLoggable(FINER))
+        logger.fine(format("Unable to parse date '%s' using format string '%s': %s", date, format, e));
 
       return null;
     }

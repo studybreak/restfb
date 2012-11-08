@@ -136,6 +136,15 @@ public class Venue implements Serializable {
   }
 
   /**
+   * The venue's zip code.
+   * 
+   * @return The venue's zip code.
+   */
+  public String getZip() {
+    return zip;
+  }
+
+  /**
    * The venue's country.
    *
    * @return The venue's country.
@@ -146,15 +155,6 @@ public class Venue implements Serializable {
   
   public void setCountry(String val) {
       this.country = val;
-  }
-
-  /**
-   * The venue's zip.
-   *
-   * @return The venue's zip.
-   */
-  public String getZip() {
-    return zip;
   }
 
   /**

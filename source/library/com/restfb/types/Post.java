@@ -22,15 +22,23 @@
 
 package com.restfb.types;
 
+import static com.restfb.json.JsonObject.getNames;
 import static com.restfb.util.DateUtils.toDateFromLongFormat;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.restfb.Facebook;
+import com.restfb.JsonMapper;
+import com.restfb.JsonMapper.JsonMappingCompleted;
+import com.restfb.json.JsonObject;
+import com.restfb.types.Checkin.Place.Location;
 import com.restfb.util.ReflectionUtils;
 
 /**
@@ -41,6 +49,7 @@ import com.restfb.util.ReflectionUtils;
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.5
  */
+@SuppressWarnings("deprecation")
 public class Post extends NamedFacebookType {
   @Facebook
   private CategorizedFacebookType from;
@@ -101,11 +110,14 @@ public class Post extends NamedFacebookType {
   @Facebook("object_id")
   private String objectId;
 
+  @Facebook("status_type")
+  private String statusType;
+
   @Facebook
   private Comments comments;
 
   @Facebook
-  private Place place;
+  private com.restfb.types.Place place;
 
   @Facebook
   private List<NamedFacebookType> to = new ArrayList<NamedFacebookType>();
@@ -116,16 +128,51 @@ public class Post extends NamedFacebookType {
   @Facebook
   private List<Property> properties = new ArrayList<Property>();
 
-  private static final long serialVersionUID = 2L;
+  @Facebook("with_tags")
+  private List<NamedFacebookType> withTags = new ArrayList<NamedFacebookType>();
+
+  @Facebook("message_tags")
+  private JsonObject rawMessageTags;
+
+  private Map<String, List<MessageTag>> messageTags = new HashMap<String, List<MessageTag>>();
+
+  private static final long serialVersionUID = 3L;
+
+  /**
+   * Post-JSON-mapping operation that populates the {@code messageTags} field
+   * "by hand".
+   * <p>
+   * This is a temporary hack until we have formal public support for
+   * it/improved {@code JsonMapper} capabilities so it can handle arbitrary Map
+   * types.
+   * 
+   * @param jsonMapper
+   *          The {@code JsonMapper} that was used to map to this type.
+   * @since 1.6.11
+   */
+  @JsonMappingCompleted
+  protected void jsonMappingCompleted(JsonMapper jsonMapper) {
+    messageTags = new HashMap<String, List<MessageTag>>();
+
+    if (rawMessageTags == null)
+      return;
+
+    for (String key : getNames(rawMessageTags)) {
+      String messageTagJson = rawMessageTags.getString(key).toString();
+      messageTags.put(key, jsonMapper.toJavaList(messageTagJson, MessageTag.class));
+    }
+  }
 
   /**
    * Represents the <a
    * href="http://developers.facebook.com/docs/reference/api/post">Place Graph
-   * API type</a>
+   * API type</a>.
    * 
    * @author <a href="http://restfb.com">Mark Allen</a>
    * @since 1.6.8
+   * @deprecated As of release 1.6.10, replaced by {@link Location}.
    */
+  @Deprecated
   public static class Place extends NamedFacebookType {
     @Facebook
     private Location location;
@@ -139,6 +186,42 @@ public class Post extends NamedFacebookType {
      */
     public Location getLocation() {
       return location;
+    }
+  }
+
+  /**
+   * Represents the <a
+   * href="http://developers.facebook.com/docs/reference/api/post">Message Tag
+   * Graph API type</a>.
+   * 
+   * @author <a href="http://restfb.com">Mark Allen</a>
+   * @since 1.6.10
+   */
+  public static class MessageTag extends NamedFacebookType {
+    @Facebook
+    private Integer offset;
+
+    @Facebook
+    private Integer length;
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The offset, within the message field, of the object mentioned.
+     * 
+     * @return The offset, within the message field, of the object mentioned.
+     */
+    public Integer getOffset() {
+      return offset;
+    }
+
+    /**
+     * The length, within the message field, of the object mentioned.
+     * 
+     * @return The length, within the message field, of the object mentioned.
+     */
+    public Integer getLength() {
+      return length;
     }
   }
 
@@ -652,6 +735,18 @@ public class Post extends NamedFacebookType {
   }
 
   /**
+   * The {@code status_type} of post this is, for example
+   * {@code "approved_friend"}.
+   * 
+   * @return The {@code status_type} of post this is, for example
+   *         {@code "approved_friend"}.
+   * @since 1.6.12
+   */
+  public String getStatusType() {
+    return statusType;
+  }
+
+  /**
    * The comments for this post.
    * 
    * @return The comments for this post.
@@ -666,7 +761,7 @@ public class Post extends NamedFacebookType {
    * @return The place where this post occurred.
    * @since 1.6.8
    */
-  public Place getPlace() {
+  public com.restfb.types.Place getPlace() {
     return place;
   }
 
@@ -699,5 +794,27 @@ public class Post extends NamedFacebookType {
    */
   public List<Property> getProperties() {
     return unmodifiableList(properties);
+  }
+
+  /**
+   * Objects (Users, Pages, etc) tagged as being with the publisher of the post
+   * ("Who are you with?" on Facebook).
+   * 
+   * @return Objects (Users, Pages, etc) tagged as being with the publisher of
+   *         the post ("Who are you with?" on Facebook).
+   * @since 1.6.10
+   */
+  public List<NamedFacebookType> getWithTags() {
+    return unmodifiableList(withTags);
+  }
+
+  /**
+   * Objects tagged in the message (Users, Pages, etc).
+   * 
+   * @return Objects tagged in the message (Users, Pages, etc).
+   * @since 1.6.10
+   */
+  public Map<String, List<MessageTag>> getMessageTags() {
+    return unmodifiableMap(messageTags);
   }
 }

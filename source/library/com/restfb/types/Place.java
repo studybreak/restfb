@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,29 +20,33 @@
  * THE SOFTWARE.
  */
 
-package com.restfb.exception;
+package com.restfb.types;
+
+import com.restfb.Facebook;
 
 /**
- * Specifies a method for mapping Graph and Old REST API exceptions to corresponding instances of
- * {@code FacebookException}.
+ * Represents information about the place where an event occurred, for example a
+ * {@link Checkin} or {@link Photo}.
  * 
+ * @author <a href="http://ex-nerd.com">Chris Petersen</a>
  * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.6
+ * @since 1.6.10
  */
-public interface FacebookExceptionMapper {
+public class Place extends NamedFacebookType {
+  @Facebook
+  private Location location;
+
+  private static final long serialVersionUID = 1L;
+
   /**
-   * Given a Facebook API exception type and message, generates an instance of the corresponding
-   * {@code FacebookGraphException} or one of its subclasses.
+   * Location containing geographic information such as latitude, longitude,
+   * country, and other fields (fields will vary based on geography and
+   * availability of information).
    * 
-   * @param errorCode
-   *          Old REST API exception error code field, e.g. 190.
-   * @param httpStatusCode
-   *          The HTTP status code returned by the server, e.g. 500.
-   * @param type
-   *          Graph API exception type field, e.g. "OAuthException".
-   * @param message
-   *          Graph or Old REST API message field, e.g. "Invalid access token signature."
-   * @return An appropriate {@code FacebookException} subclass.
+   * @return Location containing geographic information such as latitude,
+   *         longitude, country, and other fields.
    */
-  FacebookException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode, String type, String message);
+  public Location getLocation() {
+    return location;
+  }
 }

@@ -84,6 +84,9 @@ public class Photo extends NamedFacebookType {
   @Facebook
   private List<Image> images = new ArrayList<Image>();
 
+  @Facebook
+  private Place place;
+
   private static final long serialVersionUID = 1L;
 
   /**
@@ -153,7 +156,7 @@ public class Photo extends NamedFacebookType {
     private String source;
 
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * @see java.lang.Object#hashCode()
      */
@@ -275,9 +278,22 @@ public class Photo extends NamedFacebookType {
    * 
    * @return The position of this photo in the album.
    * @since 1.6.5
+   * @deprecated Facebook will start returning 0 for this field starting on
+   *             October 3, 2012.
    */
+  @Deprecated
   public Integer getPosition() {
     return position;
+  }
+
+  /**
+   * The location associated with this photo, if any.
+   * 
+   * @return The place this photo was taken.
+   * @since 1.6.10
+   */
+  public Place getPlace() {
+    return place;
   }
 
   /**

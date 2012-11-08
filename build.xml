@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- @author Mark Allen @author Scott Hernandez -->
 <project name="RestFB" default="dist" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
-	<property name="libraryVersion" value="1.6.10" />
+	<property name="libraryVersion" value="1.6.11" />
 
 	<!-- Directories -->
 	<property name="sourceDir" value="source" />
@@ -48,16 +48,16 @@
 		</jar>
 
 		<zip destfile="${buildDir}/restfb-${libraryVersion}.zip">
-			<fileset dir=".">
+			<zipfileset dir="." prefix="restfb-${libraryVersion}">
 				<include name="${sourceDir}/**" />
 				<include name="${licensingDir}/**" />
 				<include name="${miscDir}/**" />
 				<include name="build.xml" />
-			</fileset>
-			<fileset dir="${buildDir}">
+			</zipfileset>
+			<zipfileset dir="${buildDir}" prefix="restfb-${libraryVersion}">
 				<include name="restfb-*.jar" />
 				<include name="javadoc/**" />
-			</fileset>
+			</zipfileset>
 		</zip>
 	</target>
 

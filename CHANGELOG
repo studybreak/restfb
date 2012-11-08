@@ -1,15 +1,56 @@
-1.6.10 (April X, 2011 - Unreleased)
+1.6.12 (Unreleased)
 
+* Fixed "expires" parsing in AccessToken.fromQueryString().
+  Thanks to Chris Petersen.
+* Added "can_upload" field to Album.
+  Thanks to Chris Petersen.
+* Added "status_type" field to Post.
+  Thanks to Shaya Potter.
+
+1.6.11 (September 7, 2012)
+
+* New feature: you may annotate a method in a class mapped by JsonMapper with @JsonMappingCompleted.
+  Your method may be private and must take 0 parameters or 1 JsonMapper parameter.
+  This is useful for performing one-time actions after the JsonMapper has completed its work, e.g. massaging
+  JSON data into other formats.
+* Bugfix: The message_tags field in Post could throw an exception when JsonMapper attempted to map it.
+  Thanks to Shaya Potter for reporting this.
+
+1.6.10 (September 3, 2012)
+
+* Potentially-breaking change: in the event of a Graph API 404 (like fetching an object with an id that doesn't exist, e.g. /XXX)
+  we now throw the correct FacebookOAuthException instead of FacebookNetworkException.
+  Thanks to oferiko for the bug report.
 * Changed all network logging to use the new com.restfb.HTTP logger and now default to FINE instead of INFO
   for normal requests/responses. This means you must explicitly enable logging to see what goes over the wire.   
   Thanks to Johno Crawford and Marcel Stoer.
+* Added a new method to extend an existing Access Token: FacebookClient.obtainExtendedAccessToken(String appId, String appSecret, String accessToken).
+  See https://developers.facebook.com/roadmap/offline-access-removal/#extend_token for details.
+  Thanks to Chris Petersen for the initial patch.  
+* Added a new method to acquire an Application Access Token: FacebookClient.obtainAppAccessToken(String appId, String appSecret).
+  See https://developers.facebook.com/docs/authentication/applications for details.
+  Thanks to Chris Petersen for the initial patch.
 * Added Andrew Liles' InsightUtils class, which provides a nice wrapper around querying for Insights data.
   Thanks to Andrew Liles.
 * Changed the signature of FacebookClient.deleteObject(String object) to FacebookClient.deleteObject(String object, Parameter... parameters)
   to support parameterized deletion. This is a breaking change if you have a custom implementation of FacebookClient (should not be many of you).
-  Thanks to Nick Fenwick for the patch.
+  Thanks to Nick Fenwick for the patch.  
 * FacebookOAuthException now includes an "errorCode" field since FB now returns one.
   Thanks to connectvg for the bug report.
+* FacebookOAuthException now includes an "httpStatusCode" field since it's helpful for client application error messaging.
+  Thanks to mtsahakis for the suggestion.  
+* DateUtils.toDateFromLongFormat(String date) now handles the case where FB occasionally returns the number of
+  seconds since the epoch instead of a yyyy-MM-dd'T'HH:mm:ssZ string.
+  Thanks to raphael.lisboa@gauge.com.br for the bug report.
+* Added the static method AccessToken.fromQueryString(String queryString), which encapsulates logic for parsing out
+  Facebook's "standard" access token query strings, e.g. 'access_token=XXX' or 'access_token=XXX&expires=YYY'.
+  Thanks to egor@technoparkcorp.com for the suggestion.
+* Can now map Java types to JSON if they have multiple @Facebook annotations for the same value (e.g. User's hometown fields).
+  Previously the mapper would throw an exception, now it picks one of the fields - it's luck of the draw which one is used.
+  This behavior may change later, this is a quick workaround to address the issue short-term.
+  Thanks to petermein for the bug report.
+* Various changes to classes in com.restfb.types to reflect latest Facebook updates.
+  Thanks to Chris Petersen, Marcel Stoer, Mike Hazelwood, Marco Scavuzzo, Stefan Hauk, Mike Champion, nitinik, egor@technoparkcorp.com, and others.
 
 1.6.9 (October 21, 2011)
 

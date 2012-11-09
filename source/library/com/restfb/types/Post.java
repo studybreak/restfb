@@ -136,6 +136,11 @@ public class Post extends NamedFacebookType {
 
   private Map<String, List<MessageTag>> messageTags = new HashMap<String, List<MessageTag>>();
 
+  @Facebook("story_tags")
+  private JsonObject rawStoryTags;
+
+  private Map<String, List<MessageTag>> storyTags = new HashMap<String, List<MessageTag>>();
+
   private static final long serialVersionUID = 3L;
 
   /**
@@ -152,14 +157,21 @@ public class Post extends NamedFacebookType {
    */
   @JsonMappingCompleted
   protected void jsonMappingCompleted(JsonMapper jsonMapper) {
-    messageTags = new HashMap<String, List<MessageTag>>();
 
-    if (rawMessageTags == null)
-      return;
+    if (rawMessageTags != null) {
+      messageTags = new HashMap<String, List<MessageTag>>();
+      for (String key : getNames(rawMessageTags)) {
+        String messageTagJson = rawMessageTags.getString(key).toString();
+        messageTags.put(key, jsonMapper.toJavaList(messageTagJson, MessageTag.class));
+      }
+    }
 
-    for (String key : getNames(rawMessageTags)) {
-      String messageTagJson = rawMessageTags.getString(key).toString();
-      messageTags.put(key, jsonMapper.toJavaList(messageTagJson, MessageTag.class));
+    if (rawStoryTags != null) {
+      storyTags = new HashMap<String, List<MessageTag>>();
+      for (String key : getNames(rawStoryTags)) {
+        String storyTagJson = rawStoryTags.getString(key).toString();
+        storyTags.put(key, jsonMapper.toJavaList(storyTagJson, MessageTag.class));
+      }
     }
   }
 
@@ -816,5 +828,15 @@ public class Post extends NamedFacebookType {
    */
   public Map<String, List<MessageTag>> getMessageTags() {
     return unmodifiableMap(messageTags);
+  }
+
+  /**
+   * Objects tagged in the story (Users, Pages, etc).
+   * 
+   * @return Objects tagged in the message (Users, Pages, etc).
+   * @since 1.6.10
+   */
+  public Map<String, List<MessageTag>> getStoryTags() {
+    return unmodifiableMap(storyTags);
   }
 }

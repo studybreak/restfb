@@ -95,11 +95,6 @@ public final class DateUtils {
     if (date == null)
       return null;
 
-    // Is this an all-digit date? Then assume it's the "seconds since epoch"
-    // variant
-    if (date.trim().matches("\\d+"))
-      return new Date(Long.valueOf(date) * 1000L);
-
     Date parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT);
 
     // Fall back to variant without timezone if the initial parse fails

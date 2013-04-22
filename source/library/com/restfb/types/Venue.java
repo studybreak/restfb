@@ -109,6 +109,10 @@ public class Venue implements Serializable {
     return street;
   }
 
+  public void setStreet(String val) {
+    this.street = val;
+  }
+
   /**
    * The venue's city.
    *
@@ -142,6 +146,10 @@ public class Venue implements Serializable {
    */
   public String getZip() {
     return zip;
+  }
+
+  public void setZip(String val) {
+    this.zip = val;
   }
 
   /**
